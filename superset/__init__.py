@@ -141,8 +141,24 @@ pessimistic_connection_handling(db.engine)
 migrate = Migrate(app, db, directory=APP_DIR + "/migrations")
 
 # Logging configuration
-logging.basicConfig(format=app.config.get("LOG_FORMAT"))
+logging.basicConfig(format=app.config.get("LOG_FORMAT"), datefmt=app.config.get("LOG_DATE_FORMAT"))
 logging.getLogger().setLevel(app.config.get("LOG_LEVEL"))
+
+# 访问日志access log
+accessLogger = logging.getLogger("access_log")
+accessLogger.setLevel("INFO")
+accessLogger.propagate = False
+# 访问日志输出介质配置
+access_log_dir = os.path.join(APP_DIR, '../logs')
+if not os.path.exists(access_log_dir):
+    os.mkdirs(access_log_dir)
+access_logger_handler = TimedRotatingFileHandler(filename=access_log_dir + "/nodejs_access_log", when="D")
+# 访问日志输出文件后缀，修改suffix后如果要自动删除日志需要同时修改extMatch来匹配
+access_logger_handler.suffix = ".%Y-%m-%d.txt"
+# 设置这个handler的处理格式， 实例化一个Formatter对象
+access_logger_format = logging.Formatter(app.config.get("ACCESS_LOG_FORMAT"), app.config.get("LOG_DATE_FORMAT"))
+access_logger_handler.setFormatter(access_logger_format)
+accessLogger.addHandler(access_logger_handler)
 
 if app.config.get("ENABLE_TIME_ROTATE"):
     logging.getLogger().setLevel(app.config.get("TIME_ROTATE_LOG_LEVEL"))
@@ -152,6 +168,9 @@ if app.config.get("ENABLE_TIME_ROTATE"):
         interval=app.config.get("INTERVAL"),
         backupCount=app.config.get("BACKUP_COUNT"),
     )
+    runFormat = logging.Formatter(app.config.get("LOG_FORMAT"), app.config.get("LOG_DATE_FORMAT"))
+    handler.setFormatter(runFormat)
+    logging.getLogger().propagate = False
     logging.getLogger().addHandler(handler)
 
 if app.config.get("ENABLE_CORS"):
