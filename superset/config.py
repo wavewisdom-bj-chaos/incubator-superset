@@ -39,7 +39,7 @@ from superset.stats_logger import DummyStatsLogger
 STATS_LOGGER = DummyStatsLogger()
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-if "SUPERSET_HOME" in os.environ:
+if " " in os.environ:
     DATA_DIR = os.environ["SUPERSET_HOME"]
 else:
     DATA_DIR = os.path.join(os.path.expanduser("~"), ".superset")
@@ -47,7 +47,7 @@ else:
 # ---------------------------------------------------------
 # Superset specific config
 # ---------------------------------------------------------
-PACKAGE_DIR = os.path.join(BASE_DIR, "static", "assets")
+PACKAGE_DIR = os.path.join(BASE_DIR, "assets")
 PACKAGE_FILE = os.path.join(PACKAGE_DIR, "package.json")
 with open(PACKAGE_FILE) as package_file:
     VERSION_STRING = json.load(package_file)["version"]

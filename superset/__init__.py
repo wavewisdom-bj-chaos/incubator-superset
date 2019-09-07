@@ -151,7 +151,7 @@ accessLogger.propagate = False
 # 访问日志输出介质配置
 access_log_dir = os.path.join(APP_DIR, '../logs')
 if not os.path.exists(access_log_dir):
-    os.mkdirs(access_log_dir)
+    os.mkdir(access_log_dir)
 access_logger_handler = TimedRotatingFileHandler(filename=access_log_dir + "/nodejs_access_log", when="D")
 # 访问日志输出文件后缀，修改suffix后如果要自动删除日志需要同时修改extMatch来匹配
 access_logger_handler.suffix = ".%Y-%m-%d.txt"
@@ -276,3 +276,9 @@ from superset import views  # noqa
 module_datasource_map = app.config.get("DEFAULT_MODULE_DS_MAP")
 module_datasource_map.update(app.config.get("ADDITIONAL_MODULE_DS_MAP"))
 ConnectorRegistry.register_sources(module_datasource_map)
+
+# 启动时判断是否创建默认用户
+adminUser = security_manager.find_user('admin')
+if not adminUser:
+    adminRole = security_manager.find_role('Admin')
+    security_manager.add_user('admin', 'admin', 'admin', 'shenxing@wavewisdom-bj.com', adminRole, 'waveadmin')
