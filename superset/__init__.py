@@ -154,7 +154,7 @@ if not os.path.exists(access_log_dir):
     os.mkdir(access_log_dir)
 access_logger_handler = TimedRotatingFileHandler(filename=access_log_dir + "/nodejs_access_log", when="D")
 # 访问日志输出文件后缀，修改suffix后如果要自动删除日志需要同时修改extMatch来匹配
-access_logger_handler.suffix = ".%Y-%m-%d.txt"
+access_logger_handler.suffix = "%Y-%m-%d.txt"
 # 设置这个handler的处理格式， 实例化一个Formatter对象
 access_logger_format = logging.Formatter(app.config.get("ACCESS_LOG_FORMAT"), app.config.get("LOG_DATE_FORMAT"))
 access_logger_handler.setFormatter(access_logger_format)
@@ -168,6 +168,7 @@ if app.config.get("ENABLE_TIME_ROTATE"):
         interval=app.config.get("INTERVAL"),
         backupCount=app.config.get("BACKUP_COUNT"),
     )
+    handler.suffix = "%Y-%m-%d.txt"
     runFormat = logging.Formatter(app.config.get("LOG_FORMAT"), app.config.get("LOG_DATE_FORMAT"))
     handler.setFormatter(runFormat)
     logging.getLogger().propagate = False
