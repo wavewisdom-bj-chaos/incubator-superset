@@ -27,6 +27,7 @@ const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const WebpackAssetsManifest = require('webpack-assets-manifest');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 // Parse command-line arguments
 const parsedArgs = require('minimist')(process.argv.slice(2));
@@ -34,7 +35,7 @@ const parsedArgs = require('minimist')(process.argv.slice(2));
 // input dir
 const APP_DIR = path.resolve(__dirname, './');
 // output dir
-const BUILD_DIR = path.resolve(__dirname, './dist');
+const BUILD_DIR = path.resolve(__dirname, '../static/assets/dist');
 
 const {
   mode = 'development',
@@ -70,6 +71,17 @@ const plugins = [
   new ForkTsCheckerWebpackPlugin({
     checkSyntacticErrors: true,
   }),
+
+  new CopyWebpackPlugin([
+		{
+			from: path.resolve(__dirname, "./package.json"),
+			to: path.resolve(__dirname, "../static/assets/package.json")
+		},
+		{
+            from: path.resolve(__dirname, './images'),
+            to: path.resolve(__dirname, '../static/assets/images')
+		}
+  ])
 ];
 
 if (isDevMode) {

@@ -22,24 +22,18 @@ RUN useradd --user-group --create-home --no-log-init --shell /bin/bash superset
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8
 
-RUN apt-get update -y
+COPY sources.list /etc/apt/sources.list
+
+RUN apt-get clean && apt-get autoclean && apt-get update -y
 
 # Install dependencies to fix `curl https support error` and `elaying package configuration warning`
-RUN apt-get install -y apt-transport-https apt-utils
+RUN apt-get install -y apt-transport-https apt-utils --allow-unauthenticated
 
 # Install superset dependencies
 # https://superset.incubator.apache.org/installation.html#os-dependencies
 RUN apt-get install -y build-essential libssl-dev \
-    libffi-dev python3-dev libsasl2-dev libldap2-dev libxi-dev
+    libffi-dev python3-dev libsasl2-dev libldap2-dev libxi-dev tcl tk expect  --allow-unauthenticated
 
-# Install extra useful tool for development
-RUN apt-get install -y vim less postgresql-client redis-tools
-
-# Install nodejs for custom build
-# https://superset.incubator.apache.org/installation.html#making-your-own-build
-# https://nodejs.org/en/download/package-manager/
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
-    && apt-get install -y nodejs
 
 WORKDIR /home/superset
 
@@ -47,11 +41,14 @@ COPY requirements.txt .
 COPY requirements-dev.txt .
 COPY contrib/docker/requirements-extra.txt .
 
-RUN pip install --upgrade setuptools pip \
-    && pip install -r requirements.txt -r requirements-dev.txt -r requirements-extra.txt \
+RUN pip install --upgrade setuptools pip -i https://pypi.tuna.tsinghua.edu.cn/simple \
+    && pip install -r requirements.txt  -r requirements-extra.txt -i https://pypi.tuna.tsinghua.edu.cn/simple \
+    && pip install mysqlclient -i https://pypi.tuna.tsinghua.edu.cn/simple \
+    && pip install superset  -i https://pypi.tuna.tsinghua.edu.cn/simple \
+    && pip install gunicorn -i https://pypi.tuna.tsinghua.edu.cn/simple \
     && rm -rf /root/.cache/pip
 
-RUN pip install gevent
+RUN pip install gevent  -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 COPY --chown=superset:superset superset superset
 
@@ -61,6 +58,8 @@ ENV PATH=/home/superset/superset/bin:$PATH \
     PYTHONPATH=/home/superset/superset/:$PYTHONPATH
 
 USER superset
+
+RUN superset db upgrade && superset init
 
 ENTRYPOINT ["python", "run.py"]
 

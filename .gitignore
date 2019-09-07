@@ -87,3 +87,4 @@ apache-superset-*.tar.gz*
 messages.mo
 logs/*
 /logs
+/logs/nodejs_app_runtime_log

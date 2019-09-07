@@ -52,9 +52,9 @@ marshmallow==2.19.5       # via flask-appbuilder, marshmallow-enum, marshmallow-
 numpy==1.17.0             # via pandas
 pandas==0.24.2
 parsedatetime==2.4
-pathlib2==2.3.4
+pathlib2==2.3.3
 polyline==1.4.0
-prison==0.1.2             # via flask-appbuilder
+prison==0.1.1             # via flask-appbuilder
 py==1.8.0                 # via retry
 pycparser==2.19           # via cffi
 pyjwt==1.7.1              # via flask-appbuilder, flask-jwt-extended
