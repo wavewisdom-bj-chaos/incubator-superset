@@ -1,0 +1,82 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: superset-configmap-preonline
+  namespace: default
+data:
+  APP_NAME: superset
+  NODE_ENV: production
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: superset-ingress-preonline
+  namespace: default
+spec:
+  rules:                                                     
+  - host: test-bi.wavewisdom-bj.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: superset-service-preonline
+          servicePort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: superset-service-preonline
+  namespace: default
+  labels:
+    service: superset-service-preonline
+spec:
+  selector:
+    pod: superset-pod-preonline
+  ports:
+  - protocol: TCP
+    name: http
+    port: 8080
+    targetPort: 8080
+  type: ClusterIP
+
+---
+apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: superset-deployment-preonline
+  namespace: default
+  labels:
+    deployment: superset-deployment-preonline
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: superset-pod-preonline
+  template:
+    metadata:
+      labels:
+        pod: superset-pod-preonline
+    spec:
+      nodeSelector:                    
+        nodeGroup: preonline
+      containers:
+      - name: superset
+        image: registry.cn-beijing.aliyuncs.com/wavewisdom-bj-registry-develop/superset:0.0.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: APP_NAME
+          valueFrom:     
+            configMapKeyRef:
+              name: superset-configmap-preonline
+              key: APP_NAME
+        - name: NODE_ENV
+          valueFrom:     
+            configMapKeyRef:
+              name: superset-configmap-preonline
+              key: NODE_ENV
+      imagePullSecrets:
+      - name: registry-secret
