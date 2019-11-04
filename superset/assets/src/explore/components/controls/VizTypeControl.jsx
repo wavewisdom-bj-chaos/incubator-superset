@@ -129,7 +129,6 @@ export default class VizTypeControl extends React.PureComponent {
       }))
       .concat(registry.entries().filter(({ key }) => !typesWithDefaultOrder.has(key)))
       .filter(entry => entry.value.name.toLowerCase().includes(filterString));
-
     const rows = [];
     for (let i = 0; i <= filteredTypes.length; i += IMAGE_PER_ROW) {
       rows.push(
