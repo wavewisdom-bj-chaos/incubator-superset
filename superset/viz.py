@@ -55,7 +55,6 @@ from superset.utils.core import (
     to_adhoc,
 )
 
-
 config = app.config
 stats_logger = config.get("STATS_LOGGER")
 relative_start = config.get("DEFAULT_RELATIVE_START_TIME", "today")
@@ -2759,6 +2758,34 @@ class PartitionViz(NVD3TimeSeriesViz):
             levels = self.levels_for("agg_sum", [DTTM_ALIAS] + groups, df)
         return self.nest_values(levels)
 
+
+class ScrollListViz(BaseViz):
+    viz_type = 'scroll_list'
+    verbose_name = "Scroll List"
+    sort_series = False
+    is_timeseries = False
+
+    def query_obj(self):
+        d = super(ScrollListViz, self).query_obj()
+        fd = self.form_data  # form_data中包含界面左侧组件内容
+        # if fd.get('groupby'):  # 这个字段对应×××组件，不为空
+        #     d['groupby'] = fd.get('groupby')
+        # if fd.get('columns'):
+        #     d['columns'] = fd.get('columns')  # all_columns是左侧组件名，后面会提到
+        #     # 这里的例子非常简单，其实可以做很多事
+        return d
+
+    def get_data(self, df):
+        # df是pandas的DataFrame类型
+        # 这里的例子非常简单，其实可以做很多事
+        # data = np.array(df).tolist()  # 假设数据很简单，不需要做别的处理
+        # 如果除了绘图用的数据还有别的信息，可以构造一个字典来返回
+        # data = {'plot_data':plot_data,'other_info':other_info}
+        data = {
+            'rows': df.values.tolist(),
+            'columns': df.columns.values.tolist()
+        }
+        return data
 
 viz_types = {
     o.viz_type: o

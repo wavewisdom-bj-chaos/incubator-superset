@@ -2416,5 +2416,12 @@ export const controls = {
     description: t('Whether to normalize the histogram'),
     default: false,
   },
+  formatter: {
+    type: 'TextControl',
+    label: t('Formatter'),
+    description: t('The Formatter, this control is templated, so you can integrate ' +
+    '{{ feild }} in your string.'),
+    default: '',
+  },
 };
 export default controls;
