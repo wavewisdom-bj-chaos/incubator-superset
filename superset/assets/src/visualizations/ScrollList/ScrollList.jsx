@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Mustache from 'mustache';
 import moment from 'moment';
-
+import '../../utils/jquery.SuperSlide.2.1.3.source'
 import './ScrollList.css';
 
 const propTypes = {
@@ -24,39 +24,54 @@ const defaultProps = {
     }
 };
 
-class ScrollList extends React.PureComponent {
+class ScrollList extends React.Component {
     constructor(props) {
         super(props);
-        console.log('vvvvvvvv', props);
         this.state = {
             rows: props.data.rows,
-            columns: props.data.columns,
-
+            columns: props.data.columns
         }
     }
     componentDidMount() {
-        console.log('mounted mmmmmmmmmmmmm');
         console.log(this.refs.scrollList)
+        this.updateDom()
     }
     componentWillReceiveProps(nextProps) { // 父组件重传props时就会调用这个方法
-       console.log('receive props', nextProps)
+       this.setState({
+           rows: nextProps.data.rows,
+           columns: nextProps.data.columns
+       })
+        this.updateDom()
     }
     componentDidUpdate(prevProps, prevState) {
-
+      if (this.state.rows !== prevState.rows) {
+          let rect = this.refs.scrollList.getBoundingClientRect()
+      }
     }
-  render() {
-      const formater = this.props.formatter;
-      const data = this.props.data;
-      const rv = [];
-      data.rows.forEach(function(row, i) {
-          const para = data.columns.reduce(function (prev, cur, index) {
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        return false
+    }
+    updateDom() {
+        const formater = this.props.formatter;
+        const data = this.props.data;
+        const list = [];
+        data.rows.forEach(function(row, i) {
+            const para = data.columns.reduce(function (prev, cur, index) {
               prev[cur] = row[index];
               return prev
-          }, {$index: i, $no: i + 1});
-          let str = Mustache.render(formater, para);
-          rv.push(<li className="scroll-list__item" key={i}>{str}</li>)
-      });
-      return <ul ref="scrollList" className="scroll-list">{rv}</ul>
+            }, {$index: i, $no: i + 1});
+            let str = Mustache.render(formater, para);
+            list.push(`<li class="scroll-list__item">${str}</li>`)
+        });
+        let dom = $(`<ul ref="scrollList" class="scroll-list">${list.join('')}</ul>`);
+        $(this.refs.scrollList).html('').append(dom);
+            if (this.refs.scrollList.getBoundingClientRect().height < this.props.height) {
+                $(this.refs.scrollList).slide({mainCell:".scroll-list",autoPlay:true,effect:"topMarquee",vis:3,interTime:50,trigger:"click"});
+            }
+    }
+
+  render() {
+      return <div ref="scrollList" className="scroll-list__container"></div>
   }
 }
 
