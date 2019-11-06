@@ -25,11 +25,24 @@ const defaultProps = {
 };
 
 class ScrollList extends React.PureComponent {
+    constructor(props) {
+        super(props);
+        console.log('vvvvvvvv', props);
+        this.state = {
+            rows: props.data.rows,
+            columns: props.data.columns,
+
+        }
+    }
     componentDidMount() {
-        console.log('mounted mmmmmmmmmmmmm')
+        console.log('mounted mmmmmmmmmmmmm');
+        console.log(this.refs.scrollList)
     }
     componentWillReceiveProps(nextProps) { // 父组件重传props时就会调用这个方法
        console.log('receive props', nextProps)
+    }
+    componentDidUpdate(prevProps, prevState) {
+
     }
   render() {
       const formater = this.props.formatter;
@@ -37,13 +50,13 @@ class ScrollList extends React.PureComponent {
       const rv = [];
       data.rows.forEach(function(row, i) {
           const para = data.columns.reduce(function (prev, cur, index) {
-              prev[cur] = row[index]
+              prev[cur] = row[index];
               return prev
           }, {$index: i, $no: i + 1});
-          let str = Mustache.render(formater, para)
+          let str = Mustache.render(formater, para);
           rv.push(<li className="scroll-list__item" key={i}>{str}</li>)
       });
-      return <ul className="scroll-list">{rv}</ul>
+      return <ul ref="scrollList" className="scroll-list">{rv}</ul>
   }
 }
 
