@@ -54,6 +54,7 @@ import DeckGLChartPreset from './DeckGLChartPreset';
 import FilterBoxChartPlugin from '../FilterBox/FilterBoxChartPlugin';
 import TimeTableChartPlugin from '../TimeTable/TimeTableChartPlugin';
 import ScrollListChartPlugin from '../ScrollList/ScrollListChartPlugin';
+import EchartLineChartPlugin from '../EchartLine/EchartLineChartPlugin'
 import TextSequenceChartPlugin from "../TextSequence/TextSequenceChartPlugin";
 
 export default class MainPreset extends Preset {
@@ -104,6 +105,7 @@ export default class MainPreset extends Preset {
         new WordCloudChartPlugin().configure({ key: 'word_cloud' }),
         new WorldMapChartPlugin().configure({ key: 'world_map' }),
         new ScrollListChartPlugin().configure({ key: 'scroll_list' }),
+        new EchartLineChartPlugin().configure({ key: 'echart_line' }),
         new TextSequenceChartPlugin().configure({ key: 'text_sequence' })
       ],
     });

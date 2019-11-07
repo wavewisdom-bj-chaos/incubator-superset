@@ -19,7 +19,7 @@ const defaultProps = {
     data: []
 };
 
-class TextSequence extends  React.PureComponent {
+class TextSequence extends  React.Component {
     constructor(props) {
         super(props);
         this.state = {

@@ -1193,6 +1193,12 @@ export const controls = {
     default: '',
   },
 
+  y_axis_2_label: {
+    type: 'TextControl',
+    label: t('Y Axis Label'),
+    renderTrigger: true,
+    default: '',
+  },
   compare_lag: {
     type: 'TextControl',
     label: t('Comparison Period Lag'),
