@@ -61,11 +61,15 @@ class EchartLine extends React.Component {
             return
         }
         let fm = this.props.formData;
-        let timeG = fm.time_grain_sqla
+        let timeG = fm.timeGrainSqla
+        let timeTag = timeG[timeG.length - 1]
+        let formatStr = 'YYYY-MM-DD HH:mm:ss'
+        let index = formatStr.lastIndexOf(timeTag)
+        formatStr = formatStr.substring(0, index + 1)
         let option = {
         xAxis: {
           type: 'category',
-          data: data[0].values.map(item => moment(item.x).format('YYYY-MM-DD'))
+          data: data[0].values.map(item => moment(item.x).format(formatStr))
         },
         yAxis: data.map(item => ({
             name: item.yAxisLabel,
@@ -75,12 +79,13 @@ class EchartLine extends React.Component {
           data: data.map(item => item.yAxisLabel),
           x: 'center'
         },
-        series: data.map(item => {
+        series: data.map((item, index) => {
             return {
                 name: item.yAxisLabel,
                 type: 'line',
                 smooth: true,
-                data: item.values.map(item => item.y)
+                data: item.values.map(item => item.y),
+                yAxisIndex: index
             }
         }),
         tooltip: {
