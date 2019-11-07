@@ -2166,7 +2166,7 @@ class BaseDeckGLViz(BaseViz):
 
         if spatial.get("reverseCheckbox"):
             self.reverse_latlong(df, key)
-        formater
+
         if df.get(key) is None:
             raise NullValueException(
                 _(
