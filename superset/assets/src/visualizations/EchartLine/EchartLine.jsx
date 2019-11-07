@@ -39,14 +39,14 @@ class EchartLine extends React.Component {
     }
     componentDidMount() {
         this.echart = Echarts.init(this.refs.chartMain, 'light');
-        this.drawChart([])
+        this.drawChart(this.props.data.data)
     }
     componentWillReceiveProps(nextProps) { // 父组件重传props时就会调用这个方法
        this.setState({
            rows: nextProps.data.rows,
            columns: nextProps.data.columns
-       })
-        this.drawChart([])
+       });
+        this.drawChart(nextProps.data.data)
     }
     componentDidUpdate(prevProps, prevState) {
       if (this.state.rows !== prevState.rows) {
@@ -57,53 +57,38 @@ class EchartLine extends React.Component {
         return false
     }
     drawChart(data) {
+        if (data.length <= 0) {
+            return
+        }
+        let fm = this.props.formData;
+        let timeG = fm.time_grain_sqla
         let option = {
         xAxis: {
           type: 'category',
-          data: data.map(item => item.time)
+          data: data[0].values.map(item => moment(item.x).format('YYYY-MM-DD'))
         },
-        yAxis: [
-          {
-            name: '总报警数',
+        yAxis: data.map(item => ({
+            name: item.yAxisLabel,
             type: 'value'
-          },
-          {
-            name: '总报警数/小时',
-            type: 'value'
-          }
-        ],
+        })),
         legend: {
-          data: ['总报警数', '报警数/小时'],
+          data: data.map(item => item.yAxisLabel),
           x: 'center'
         },
-        series: [
-          {
-            name: '总报警数',
-            data: data.map(item => item.alarmCount),
-            type: 'line',
-            smooth: true
-          },
-          {
-            name: '报警数/小时',
-            data: data.map(item => item.alarmCountPerHour),
-            type: 'line',
-            smooth: true,
-            yAxisIndex: 1
-          }
-        ],
-        dataZoom: [
-          {
-            show: true,
-            realtime: true,
-            start: 0,
-            end: 100
-          }
-        ],
+        series: data.map(item => {
+            return {
+                name: item.yAxisLabel,
+                type: 'line',
+                smooth: true,
+                data: item.values.map(item => item.y)
+            }
+        }),
         tooltip: {
           trigger: 'axis',
           formatter: "{b} <br/>{a0}：{c0}<br/>{a1}：{c1}"
         }
       };
+        console.log(option)
       this.echart.setOption(option, true)
     }
 
