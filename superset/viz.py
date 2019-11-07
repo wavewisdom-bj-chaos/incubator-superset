@@ -2166,7 +2166,7 @@ class BaseDeckGLViz(BaseViz):
 
         if spatial.get("reverseCheckbox"):
             self.reverse_latlong(df, key)
-
+        formater
         if df.get(key) is None:
             raise NullValueException(
                 _(
@@ -2773,6 +2773,7 @@ class ScrollListViz(BaseViz):
         # if fd.get('columns'):
         #     d['columns'] = fd.get('columns')  # all_columns是左侧组件名，后面会提到
         #     # 这里的例子非常简单，其实可以做很多事
+
         return d
 
     def get_data(self, df):
@@ -2786,6 +2787,31 @@ class ScrollListViz(BaseViz):
             'columns': df.columns.values.tolist()
         }
         return data
+
+class TextSequenceViz(BaseViz):
+    viz_type = 'text_sequence'
+    verbose_name = 'Text Sequence'
+    sort_series = False
+    is_timeseries = False
+
+    def query_obj(self):
+        d = super(TextSequenceViz, self).query_obj()
+        fd = self.form_data
+        # if not fd.get('all_columns'):  # 这个字段对应×××组件，不为空
+        #     raise Exception('Choose Columns')
+        #
+        # if fd.get('all_columns'):
+        #     d['columns'] = fd.get('all_columns')  # all_columns是左侧组件名，后面会提到
+
+        return d
+
+    def get_data(self, df):
+        # data = np.array(df).tolist()
+        data = {
+            'row': df.values.tolist(),
+            'columns': df.columns.values.tolist()
+        }
+        return  data
 
 viz_types = {
     o.viz_type: o

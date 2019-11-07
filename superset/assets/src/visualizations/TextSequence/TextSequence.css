@@ -1,0 +1,32 @@
+.text_sequence .text-sequence_box {
+    display: inline-block;
+    background-color: #999;
+}
+
+.text_sequence .text-sequence_title {
+    font-size: 20px;
+    padding: 10px 15px;
+}
+
+.text_sequence .text-sequence_ul {
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    width: 350px;
+    margin-right: 40px;
+}
+.text_sequence li.text-sequence_content {
+    list-style: none;
+    width: 100px;
+    background: #ccc;
+    height: 100px;
+    text-align: center;
+}
+
+.text_sequence li.text-sequence_content p.text-sequence_name {
+    line-height: 30px;
+}
+
+.text_sequence li.text-sequence_content p.text-sequence_name:nth-child(2) {
+    color: red;
+}

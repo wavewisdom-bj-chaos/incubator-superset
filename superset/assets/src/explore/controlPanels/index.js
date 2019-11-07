@@ -73,6 +73,7 @@ import DeckPolygon from './DeckPolygon';
 import DeckScatter from './DeckScatter';
 import DeckScreengrid from './DeckScreengrid';
 import ScrollList from "./ScrollList";
+import TextSequence from "./TextSequence";
 
 export const controlPanelConfigs = extraOverrides({
   area: Area,
@@ -123,7 +124,8 @@ export const controlPanelConfigs = extraOverrides({
   deck_polygon: DeckPolygon,
   deck_scatter: DeckScatter,
   deck_screengrid: DeckScreengrid,
-  scroll_list: ScrollList
+  scroll_list: ScrollList,
+  text_sequence: TextSequence
 });
 
 export default controlPanelConfigs;
