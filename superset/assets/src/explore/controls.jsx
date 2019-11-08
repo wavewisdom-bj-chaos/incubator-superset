@@ -2429,5 +2429,13 @@ export const controls = {
     '{{ feild }} in your string.'),
     default: '',
   },
+  scroll_type: {
+    type: 'SelectControl',
+    freeForm: true,
+    label: t('Scroll Type'),
+    validators: [v.nonEmpty],
+    default: null,
+    choices: formatSelectOptions(['top', 'topMarquee']) // 可扩展
+  },
 };
 export default controls;

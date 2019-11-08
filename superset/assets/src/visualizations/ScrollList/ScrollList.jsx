@@ -52,6 +52,7 @@ class ScrollList extends React.Component {
         return false
     }
     updateDom() {
+        const _this = this
         const formater = this.props.formatter;
         const data = this.props.data;
         const list = [];
@@ -65,9 +66,27 @@ class ScrollList extends React.Component {
         });
         let dom = $(`<ul ref="scrollList" class="scroll-list">${list.join('')}</ul>`);
         $(this.refs.scrollList).html('').append(dom);
-            if (this.refs.scrollList.getBoundingClientRect().height < this.props.height) {
-                $(this.refs.scrollList).slide({mainCell:".scroll-list",autoPlay:true,effect:"topMarquee",vis:3,interTime:50,trigger:"click"});
+        let maxCount = 0, tmpHeight=0;
+        dom.find('.scroll-list__item').each(function (index, item) {
+            // 计算每页最多显示条数
+            tmpHeight += $(item).outerHeight(true);
+            maxCount++;
+            if (tmpHeight >= _this.props.height) {
+                return false
             }
+        })
+        if (this.refs.scrollList.getBoundingClientRect().height > this.props.height) {
+            switch (this.props.scrollType) {
+                case 'topMarquee':
+                    $(this.refs.scrollList).slide({mainCell:".scroll-list",autoPlay:true, effect:"topMarquee", vis:maxCount, interTime:30,trigger:"click"});
+                    break;
+                case 'top':
+                    $(this.refs.scrollList).slide({mainCell:".scroll-list",autoPlay:true, effect:"top", delayTime: 500, pnLoop: true, autoPage:true, scroll: maxCount, vis:maxCount, trigger:"click"});
+                    break;
+                default:break;
+            }
+
+        }
     }
 
   render() {

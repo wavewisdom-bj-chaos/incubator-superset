@@ -16,11 +16,12 @@ export default {
           ],
        },
       {
-          label: t('Formatter'),
-          description: t('Use this section edit display format'),
+          label: t('Option'),
+          description: t('Use this section edit display format, scroll type'),
           expanded: true,
           controlSetRows: [
-              ['formatter']
+              ['formatter'],
+              ['scroll_type']
           ],
        }
   ],
